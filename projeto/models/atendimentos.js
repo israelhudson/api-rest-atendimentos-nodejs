@@ -1,5 +1,6 @@
 const moment = require('moment')
 const conexo = require('../infraestrutura/conexao')
+const { restart } = require('nodemon')
 
 class Atendimento {
     adiciona(atendimento, res){
@@ -39,6 +40,31 @@ class Atendimento {
                     res.status(201).json(resultados)
             })
         }
+    }
+
+    lista(res){
+        const sql = 'SELECT * FROM Atendimentos'
+
+        conexo.query(sql, (erro, resultados) => {
+            if(erro){
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(resultados)
+            }
+        })
+    }
+
+    buscarPorId(id, res) {
+        const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
+
+        conexo.query(sql, (erro, resultados) => {
+            const atendimento = resultados[0]
+            if(erro){
+                res.status(400).json(erro)
+            }else{
+                res.status(200).json(atendimento)
+            }
+        })
     }
 }
 
